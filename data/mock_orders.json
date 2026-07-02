@@ -1,0 +1,16 @@
+[
+    {
+      "order_id": "A10001",
+      "user_id": "u_001",
+      "status": "shipped",
+      "item_name": "蓝牙耳机",
+      "estimated_delivery": "2026-07-05"
+    },
+    {
+      "order_id": "A10002",
+      "user_id": "u_002",
+      "status": "processing",
+      "item_name": "机械键盘",
+      "estimated_delivery": "2026-07-08"
+    }
+  ]
