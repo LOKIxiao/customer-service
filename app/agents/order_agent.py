@@ -24,7 +24,7 @@ class OrderAgent:
         item_name = order.get('item_name', '商品')
         estimated_delivery = order.get('estimated_delivery', '暂未提供预计送达时间')
 
-        status_text = self._transltate_status(status)
+        status_text = self._translate_status(status)
         return (
             f'你的订单{order_id} ({item_name}) 当前状态是{status_text},'
             f'预计送达时间为{estimated_delivery}'
@@ -32,7 +32,7 @@ class OrderAgent:
 
 
 
-    def _transltate_status(self, status: str) -> str:
+    def _translate_status(self, status: str) -> str:
         status_map = {
             'shipped': '已发货',
             'processing': '处理中',
