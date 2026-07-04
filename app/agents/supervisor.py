@@ -1,20 +1,22 @@
+from pathlib import Path
+
 from app.agents.compliance_agent import ComplianceAgent
 from app.agents.intent_agent import IntentAgent
 from app.agents.order_agent import OrderAgent
-from app.schemas.chat import ChatRequest, ChatResponse
 from app.agents.refund_policy_agent import RefundPolicyAgent
 from app.agents.ticket_agent import TicketAgent
+from app.schemas.chat import ChatRequest, ChatResponse
 
 
 
 
 class Supervisor:
-    def __init__(self) -> None:
+    def __init__(self, tickets_file: Path | None = None) -> None:
         self.intent_agent = IntentAgent()
         self.order_agent = OrderAgent()
         self.compliance_agent = ComplianceAgent()
         self.refund_policy_agent = RefundPolicyAgent()
-        self.ticket_agent = TicketAgent()
+        self.ticket_agent = TicketAgent(tickets_file=tickets_file) if tickets_file else TicketAgent()
 
     def handle(self, request: ChatRequest) -> ChatResponse:
         trace = ['ChatAPI', 'Supervisor']
@@ -53,4 +55,3 @@ class Supervisor:
             intent=intent_result.intent,
             trace=trace,
         )
-

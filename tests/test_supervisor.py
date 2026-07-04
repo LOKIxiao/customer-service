@@ -41,8 +41,9 @@ def test_supervisor_handles_refund_policy():
         "ComplianceAgent",
     ]
 
-def test_supervisor_handles_ticket_create():
-    supervisor = Supervisor()
+def test_supervisor_handles_ticket_create(tmp_path):
+    tickets_file = tmp_path / "mock_tickets.json"
+    supervisor = Supervisor(tickets_file=tickets_file)
 
     response = supervisor.handle(
         ChatRequest(
