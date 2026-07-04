@@ -1,8 +1,8 @@
 # Customer Service Agent
 
-一个基于 FastAPI 的智能客服多 Agent 系统，面向电商客服场景，支持订单查询、退款政策问答、工单创建与查询、合规审查等能力。
+一个基于 FastAPI + LangGraph 的智能客服多 Agent 系统，面向电商客服场景，支持订单查询、退款政策问答、工单创建与查询、短期会话记忆、合规审查等能力。
 
-项目目标是模拟真实客服系统中的 Agent 编排流程：用户消息进入 `/chat` 接口后，由 Supervisor 统一调度多个业务 Agent，并通过工具层访问 mock 业务数据，最后经过合规审查后返回回复。
+项目目标是模拟真实客服系统中的 Agent 编排流程：用户消息进入 `/chat` 接口后，由 Supervisor 调用 LangGraph StateGraph 执行多 Agent 编排，通过条件边动态路由到不同业务 Agent，并通过工具层访问 mock 业务数据，最后经过合规审查后返回回复。
 
 ## 功能
 
@@ -14,7 +14,8 @@
 - 短期会话记忆：使用内存版 SessionMemory 保存同一 session 下最近多轮对话
 - 记忆查询：支持用户询问“刚才我问了什么？”，系统会基于当前 session 的历史消息回答
 - 调用链追踪：通过 `trace` 字段展示一次请求经过的 Agent 和工具
-- 自动化测试：使用 pytest 覆盖 Agent 和 Supervisor 主链路
+- 图编排：基于 LangGraph StateGraph 将意图识别、业务处理、记忆查询和合规审查拆分为独立节点
+- 自动化测试：使用 pytest 覆盖 Agent、Memory、LangGraph 编排和 Supervisor 主链路
 
 ## 架构
 
@@ -24,16 +25,35 @@ User
 FastAPI /chat
  ↓
 Supervisor
+ ↓
+LangGraph StateGraph
  ├── SessionMemory
- ├── IntentAgent
- ├── MemoryAgent
- ├── OrderAgent
- │   └── OrderTools
- ├── RefundPolicyAgent
- │   └── KnowledgeBase
- ├── TicketAgent
- │   └── TicketTools
- └── ComplianceAgent
+ ├── intent_node -> IntentAgent
+ ├── order_node -> OrderAgent -> OrderTools
+ ├── refund_node -> RefundPolicyAgent -> KnowledgeBase
+ ├── ticket_node -> TicketAgent -> TicketTools
+ ├── memory_node -> MemoryAgent
+ ├── fallback_node
+ └── compliance_node -> ComplianceAgent
+```
+
+LangGraph 节点流转：
+
+```text
+START
+ ↓
+intent_node
+ ↓
+route_by_intent
+ ├── order_node
+ ├── refund_node
+ ├── ticket_node
+ ├── memory_node
+ └── fallback_node
+ ↓
+compliance_node
+ ↓
+END
 ```
 
 ## 请求流程
@@ -47,13 +67,13 @@ ChatAPI
  ↓
 Supervisor
  ↓
-IntentAgent -> order_query
+LangGraph intent_node -> order_query
  ↓
-OrderAgent
+order_node -> OrderAgent
  ↓
 OrderTools -> data/mock_orders.json
  ↓
-ComplianceAgent
+compliance_node -> ComplianceAgent
  ↓
 返回订单状态和预计送达时间
 ```
@@ -63,13 +83,13 @@ ComplianceAgent
 ```text
 用户：怎么退款？
  ↓
-IntentAgent -> refund_policy
+LangGraph intent_node -> refund_policy
  ↓
-RefundPolicyAgent
+refund_node -> RefundPolicyAgent
  ↓
 KnowledgeBase -> data/knowledge_base/refund_policy.md
  ↓
-ComplianceAgent
+compliance_node -> ComplianceAgent
  ↓
 返回退款政策说明
 ```
@@ -79,13 +99,13 @@ ComplianceAgent
 ```text
 用户：我要投诉，商品坏了
  ↓
-IntentAgent -> ticket_create
+LangGraph intent_node -> ticket_create
  ↓
-TicketAgent
+ticket_node -> TicketAgent
  ↓
 TicketTools -> data/mock_tickets.json
  ↓
-ComplianceAgent
+compliance_node -> ComplianceAgent
  ↓
 返回工单编号和处理状态
 ```
@@ -95,13 +115,13 @@ ComplianceAgent
 ```text
 用户：刚才我问了什么？
  ↓
-IntentAgent -> memory_query
+LangGraph intent_node -> memory_query
  ↓
-MemoryAgent
+memory_node -> MemoryAgent
  ↓
 SessionMemory -> 当前 session 历史消息
  ↓
-ComplianceAgent
+compliance_node -> ComplianceAgent
  ↓
 返回上一轮用户问题
 ```
@@ -121,6 +141,8 @@ customer-service-agent/
 │   │   ├── ticket_agent.py
 │   │   ├── memory_agent.py
 │   │   └── compliance_agent.py
+│   ├── graphs/
+│   │   └── customer_service_graph.py
 │   ├── memory/
 │   │   └── session_memory.py
 │   ├── tools/
@@ -301,18 +323,20 @@ curl -X POST http://127.0.0.1:8000/chat \
 - `ComplianceAgent` 脱敏和人工转接风险识别
 - `SessionMemory` 短期会话记忆
 - `MemoryAgent` 基于 SessionMemory 回答历史问题
-- `Supervisor` 多 Agent 编排主链路
+- `LangGraph StateGraph` 多 Agent 图编排
+- `Supervisor` 图执行入口和 API 适配
 
 ## 当前亮点
 
-- 使用 Supervisor 统一编排多个 Agent，API 层只负责接收请求和返回响应
+- 使用 LangGraph StateGraph 实现多 Agent 编排，API 层只负责接收请求和返回响应
+- 通过条件边根据 `intent` 动态路由到订单、退款、工单、记忆或兜底节点
 - Agent 层与工具层分离，便于后续替换真实订单系统、工单系统和知识库服务
 - 订单查询按 `user_id` 做权限校验，避免越权访问其他用户订单
 - 工单测试通过 pytest `tmp_path` 隔离测试数据，避免污染 `data/mock_tickets.json`
 - 使用内存版 `SessionMemory` 保存同一 session 下的用户消息和助手回复
 - 通过 `MemoryAgent` 支持基于 session 的历史问题查询
 - 所有最终回复都会经过 `ComplianceAgent`，具备基础脱敏和风险识别能力
-- `trace` 字段展示 Agent 调用链，方便调试、演示和后续接入 OpenTelemetry
+- `trace` 字段展示 LangGraph 节点和 Agent 调用链，方便调试、演示和后续接入 OpenTelemetry
 
 ## 后续规划
 
