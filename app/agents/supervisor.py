@@ -5,21 +5,32 @@ from app.agents.intent_agent import IntentAgent
 from app.agents.order_agent import OrderAgent
 from app.agents.refund_policy_agent import RefundPolicyAgent
 from app.agents.ticket_agent import TicketAgent
+from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest, ChatResponse
 
 
 
 
 class Supervisor:
-    def __init__(self, tickets_file: Path | None = None) -> None:
+    def __init__(
+        self,
+        tickets_file: Path | None = None,
+        memory: SessionMemory | None = None,
+    ) -> None:
         self.intent_agent = IntentAgent()
         self.order_agent = OrderAgent()
         self.compliance_agent = ComplianceAgent()
         self.refund_policy_agent = RefundPolicyAgent()
         self.ticket_agent = TicketAgent(tickets_file=tickets_file) if tickets_file else TicketAgent()
+        self.memory = memory or SessionMemory()
 
     def handle(self, request: ChatRequest) -> ChatResponse:
         trace = ['ChatAPI', 'Supervisor']
+        self.memory.add_message(
+            session_id=request.session_id,
+            role="user",
+            content=request.message,
+        )
 
         intent_result = self.intent_agent.classify(request.message)
         trace.append('IntentAgent')
@@ -49,6 +60,11 @@ class Supervisor:
 
         compliance_result = self.compliance_agent.review(raw_reply)
         trace.append("ComplianceAgent")
+        self.memory.add_message(
+            session_id=request.session_id,
+            role="assistant",
+            content=compliance_result.response,
+        )
 
         return ChatResponse(
             reply=compliance_result.response,

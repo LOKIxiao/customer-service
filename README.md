@@ -11,6 +11,7 @@
 - 退款政策问答：基于本地知识库文件回答退款、退货、到账时效等问题
 - 工单处理：支持创建投诉工单和查询最近工单状态
 - 合规审查：支持手机号脱敏和高风险关键词识别
+- 短期会话记忆：使用内存版 SessionMemory 保存同一 session 下最近多轮对话
 - 调用链追踪：通过 `trace` 字段展示一次请求经过的 Agent 和工具
 - 自动化测试：使用 pytest 覆盖 Agent 和 Supervisor 主链路
 
@@ -22,6 +23,7 @@ User
 FastAPI /chat
  ↓
 Supervisor
+ ├── SessionMemory
  ├── IntentAgent
  ├── OrderAgent
  │   └── OrderTools
@@ -100,6 +102,8 @@ customer-service-agent/
 │   │   ├── refund_policy_agent.py
 │   │   ├── ticket_agent.py
 │   │   └── compliance_agent.py
+│   ├── memory/
+│   │   └── session_memory.py
 │   ├── tools/
 │   │   ├── order_tools.py
 │   │   ├── ticket_tools.py
@@ -248,6 +252,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 - `RefundPolicyAgent` 退款政策回复
 - `TicketAgent` 工单创建和查询
 - `ComplianceAgent` 脱敏和人工转接风险识别
+- `SessionMemory` 短期会话记忆
 - `Supervisor` 多 Agent 编排主链路
 
 ## 当前亮点
@@ -256,12 +261,13 @@ curl -X POST http://127.0.0.1:8000/chat \
 - Agent 层与工具层分离，便于后续替换真实订单系统、工单系统和知识库服务
 - 订单查询按 `user_id` 做权限校验，避免越权访问其他用户订单
 - 工单测试通过 pytest `tmp_path` 隔离测试数据，避免污染 `data/mock_tickets.json`
+- 使用内存版 `SessionMemory` 保存同一 session 下的用户消息和助手回复
 - 所有最终回复都会经过 `ComplianceAgent`，具备基础脱敏和风险识别能力
 - `trace` 字段展示 Agent 调用链，方便调试、演示和后续接入 OpenTelemetry
 
 ## 后续规划
 
-- 接入 Redis 保存短期会话记忆，支持多轮上下文
+- 将内存版 SessionMemory 替换为 Redis，实现可持久化的短期会话记忆
 - 使用向量数据库将退款政策问答升级为 RAG
 - 接入真实 LLM，实现更灵活的意图识别和回复生成
 - 引入 OpenTelemetry 记录 Agent 调用链和工具耗时

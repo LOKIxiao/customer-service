@@ -1,4 +1,5 @@
 from app.agents.supervisor import Supervisor
+from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest
 
 
@@ -57,3 +58,24 @@ def test_supervisor_handles_ticket_create(tmp_path):
     assert "已为你创建工单" in response.reply
     assert "TicketAgent" in response.trace
     assert "TicketTools" in response.trace
+
+
+def test_supervisor_records_conversation_memory():
+    memory = SessionMemory()
+    supervisor = Supervisor(memory=memory)
+
+    response = supervisor.handle(
+        ChatRequest(
+            user_id="u_001",
+            session_id="s_memory",
+            message="我的订单什么时候到？",
+        )
+    )
+
+    messages = memory.get_messages("s_memory")
+
+    assert len(messages) == 2
+    assert messages[0].role == "user"
+    assert messages[0].content == "我的订单什么时候到？"
+    assert messages[1].role == "assistant"
+    assert messages[1].content == response.reply
