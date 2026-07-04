@@ -32,3 +32,11 @@ def test_extracts_order_id():
 
     assert result.intent == "order_query"
     assert result.slots["order_id"] == "A10001"
+
+
+def test_classifies_memory_query():
+    agent = IntentAgent()
+
+    result = agent.classify("刚才我问了什么？")
+
+    assert result.intent == "memory_query"

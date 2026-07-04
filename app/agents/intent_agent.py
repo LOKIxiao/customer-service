@@ -10,6 +10,9 @@ class IntentAgent:
 
         if self._contains_any(normalized_message, ["人工", "真人", "客服", "转人工"]):
             return IntentResult(intent="human_handoff", confidence=0.9)
+        
+        if self._contains_any(normalized_message, ["刚才", "之前", "上一句", "上次", "问了什么", "说了什么"]):
+            return IntentResult(intent="memory_query", confidence=0.8)
 
         if self._contains_any(normalized_message, ["工单", "投诉", "反馈", "报修"]):
             if self._contains_any(normalized_message, ["进度", "状态", "查询", "处理到哪"]):
@@ -22,7 +25,6 @@ class IntentAgent:
         if self._contains_any(normalized_message, ["订单", "物流", "快递", "发货", "到哪", "什么时候到", "送达"]):
             slots = {"order_id": order_id} if order_id else {}
             return IntentResult(intent="order_query", confidence=0.88, slots=slots)
-
         return IntentResult(intent="unknown", confidence=0.35, need_clarification=True)
 
 

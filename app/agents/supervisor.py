@@ -7,7 +7,7 @@ from app.agents.refund_policy_agent import RefundPolicyAgent
 from app.agents.ticket_agent import TicketAgent
 from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest, ChatResponse
-
+from app.agents.memory_agent import MemoryAgent
 
 
 
@@ -23,6 +23,7 @@ class Supervisor:
         self.refund_policy_agent = RefundPolicyAgent()
         self.ticket_agent = TicketAgent(tickets_file=tickets_file) if tickets_file else TicketAgent()
         self.memory = memory or SessionMemory()
+        self.memory_agent = MemoryAgent(self.memory)
 
     def handle(self, request: ChatRequest) -> ChatResponse:
         trace = ['ChatAPI', 'Supervisor']
@@ -53,6 +54,10 @@ class Supervisor:
                 message=request.message,
             )
             trace.extend(["TicketAgent", "TicketTools"])
+        
+        elif intent_result.intent == "memory_query":
+            raw_reply = self.memory_agent.handle(request.session_id)
+            trace.append("MemoryAgent")
 
         
         else:

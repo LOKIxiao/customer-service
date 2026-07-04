@@ -12,6 +12,7 @@
 - 工单处理：支持创建投诉工单和查询最近工单状态
 - 合规审查：支持手机号脱敏和高风险关键词识别
 - 短期会话记忆：使用内存版 SessionMemory 保存同一 session 下最近多轮对话
+- 记忆查询：支持用户询问“刚才我问了什么？”，系统会基于当前 session 的历史消息回答
 - 调用链追踪：通过 `trace` 字段展示一次请求经过的 Agent 和工具
 - 自动化测试：使用 pytest 覆盖 Agent 和 Supervisor 主链路
 
@@ -25,6 +26,7 @@ FastAPI /chat
 Supervisor
  ├── SessionMemory
  ├── IntentAgent
+ ├── MemoryAgent
  ├── OrderAgent
  │   └── OrderTools
  ├── RefundPolicyAgent
@@ -88,6 +90,22 @@ ComplianceAgent
 返回工单编号和处理状态
 ```
 
+记忆查询流程：
+
+```text
+用户：刚才我问了什么？
+ ↓
+IntentAgent -> memory_query
+ ↓
+MemoryAgent
+ ↓
+SessionMemory -> 当前 session 历史消息
+ ↓
+ComplianceAgent
+ ↓
+返回上一轮用户问题
+```
+
 ## 项目结构
 
 ```text
@@ -101,6 +119,7 @@ customer-service-agent/
 │   │   ├── order_agent.py
 │   │   ├── refund_policy_agent.py
 │   │   ├── ticket_agent.py
+│   │   ├── memory_agent.py
 │   │   └── compliance_agent.py
 │   ├── memory/
 │   │   └── session_memory.py
@@ -237,6 +256,34 @@ curl -X POST http://127.0.0.1:8000/chat \
 }
 ```
 
+### 记忆查询
+
+先发送第一轮消息：
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"u_001","session_id":"s_memory_demo","message":"我的订单什么时候到？"}'
+```
+
+再使用相同的 `session_id` 查询历史：
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"user_id":"u_001","session_id":"s_memory_demo","message":"刚才我问了什么？"}'
+```
+
+示例返回：
+
+```json
+{
+  "reply": "你刚才问的是：我的订单什么时候到？",
+  "intent": "memory_query",
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "MemoryAgent", "ComplianceAgent"]
+}
+```
+
 ## 测试
 
 运行全部测试：
@@ -253,6 +300,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 - `TicketAgent` 工单创建和查询
 - `ComplianceAgent` 脱敏和人工转接风险识别
 - `SessionMemory` 短期会话记忆
+- `MemoryAgent` 基于 SessionMemory 回答历史问题
 - `Supervisor` 多 Agent 编排主链路
 
 ## 当前亮点
@@ -262,6 +310,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 - 订单查询按 `user_id` 做权限校验，避免越权访问其他用户订单
 - 工单测试通过 pytest `tmp_path` 隔离测试数据，避免污染 `data/mock_tickets.json`
 - 使用内存版 `SessionMemory` 保存同一 session 下的用户消息和助手回复
+- 通过 `MemoryAgent` 支持基于 session 的历史问题查询
 - 所有最终回复都会经过 `ComplianceAgent`，具备基础脱敏和风险识别能力
 - `trace` 字段展示 Agent 调用链，方便调试、演示和后续接入 OpenTelemetry
 

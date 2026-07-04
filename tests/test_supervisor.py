@@ -79,3 +79,27 @@ def test_supervisor_records_conversation_memory():
     assert messages[0].content == "我的订单什么时候到？"
     assert messages[1].role == "assistant"
     assert messages[1].content == response.reply
+
+
+def test_supervisor_handles_memory_query():
+    supervisor = Supervisor()
+
+    supervisor.handle(
+        ChatRequest(
+            user_id="u_001",
+            session_id="s_memory_query",
+            message="我的订单什么时候到？",
+        )
+    )
+
+    response = supervisor.handle(
+        ChatRequest(
+            user_id="u_001",
+            session_id="s_memory_query",
+            message="刚才我问了什么？",
+        )
+    )
+
+    assert response.intent == "memory_query"
+    assert "我的订单什么时候到？" in response.reply
+    assert "MemoryAgent" in response.trace
