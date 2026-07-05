@@ -7,7 +7,9 @@ from app.agents.intent_agent import IntentAgent
 from app.agents.memory_agent import MemoryAgent
 from app.agents.order_agent import OrderAgent
 from app.agents.refund_policy_agent import RefundPolicyAgent
+from app.agents.response_agent import ResponseAgent
 from app.agents.ticket_agent import TicketAgent
+from app.llm.base import BaseLLMClient
 from app.memory.session_memory import SessionMemory
 
 
@@ -29,8 +31,10 @@ def create_customer_service_graph(
     ticket_agent: TicketAgent,
     compliance_agent: ComplianceAgent,
     memory: SessionMemory,
+    llm_client: BaseLLMClient,
 ):
     memory_agent = MemoryAgent(memory)
+    response_agent = ResponseAgent(llm_client)
 
     def intent_node(state: CustomerServiceState) -> CustomerServiceState:
         memory.add_message(state["session_id"], "user", state["message"])
@@ -83,6 +87,18 @@ def create_customer_service_graph(
         raw_reply = f"我识别到你的意图是 {state['intent']}，但这个业务 Agent 还没有接入。"
         return {**state, "raw_reply": raw_reply}
 
+    def response_node(state: CustomerServiceState) -> CustomerServiceState:
+        reply = response_agent.generate(
+            user_message=state["message"],
+            intent=state["intent"],
+            raw_reply=state["raw_reply"],
+        )
+        return {
+            **state,
+            "raw_reply": reply,
+            "trace": state["trace"] + ["ResponseAgent"],
+        }
+
     def compliance_node(state: CustomerServiceState) -> CustomerServiceState:
         result = compliance_agent.review(state["raw_reply"])
         memory.add_message(state["session_id"], "assistant", result.response)
@@ -116,6 +132,7 @@ def create_customer_service_graph(
     graph.add_node("ticket", ticket_node)
     graph.add_node("memory", memory_node)
     graph.add_node("fallback", fallback_node)
+    graph.add_node("response", response_node)
     graph.add_node("compliance", compliance_node)
 
     #首先intent节点处理
@@ -133,11 +150,12 @@ def create_customer_service_graph(
         },
     )
 
-    graph.add_edge("order", "compliance")
-    graph.add_edge("refund", "compliance")
-    graph.add_edge("ticket", "compliance")
-    graph.add_edge("memory", "compliance")
-    graph.add_edge("fallback", "compliance")
+    graph.add_edge("order", "response")
+    graph.add_edge("refund", "response")
+    graph.add_edge("ticket", "response")
+    graph.add_edge("memory", "response")
+    graph.add_edge("fallback", "response")
+    graph.add_edge("response", "compliance")
     # 返回compliance节点，减少幻觉
     graph.add_edge("compliance", END)
     

@@ -13,6 +13,7 @@
 - 合规审查：支持手机号脱敏和高风险关键词识别
 - 短期会话记忆：使用内存版 SessionMemory 保存同一 session 下最近多轮对话
 - 记忆查询：支持用户询问“刚才我问了什么？”，系统会基于当前 session 的历史消息回答
+- LLM 回复生成：通过 ResponseAgent 接入 OpenAI-compatible LLM，对业务 Agent 的原始回复生成更自然的客服话术，并在失败时回退到原始回复
 - 调用链追踪：通过 `trace` 字段展示一次请求经过的 Agent 和工具
 - 图编排：基于 LangGraph StateGraph 将意图识别、业务处理、记忆查询和合规审查拆分为独立节点
 - 自动化测试：使用 pytest 覆盖 Agent、Memory、LangGraph 编排和 Supervisor 主链路
@@ -34,6 +35,7 @@ LangGraph StateGraph
  ├── ticket_node -> TicketAgent -> TicketTools
  ├── memory_node -> MemoryAgent
  ├── fallback_node
+ ├── response_node -> ResponseAgent -> LLMClient
  └── compliance_node -> ComplianceAgent
 ```
 
@@ -50,6 +52,8 @@ route_by_intent
  ├── ticket_node
  ├── memory_node
  └── fallback_node
+ ↓
+response_node
  ↓
 compliance_node
  ↓
@@ -73,6 +77,8 @@ order_node -> OrderAgent
  ↓
 OrderTools -> data/mock_orders.json
  ↓
+response_node -> ResponseAgent
+ ↓
 compliance_node -> ComplianceAgent
  ↓
 返回订单状态和预计送达时间
@@ -88,6 +94,8 @@ LangGraph intent_node -> refund_policy
 refund_node -> RefundPolicyAgent
  ↓
 KnowledgeBase -> data/knowledge_base/refund_policy.md
+ ↓
+response_node -> ResponseAgent
  ↓
 compliance_node -> ComplianceAgent
  ↓
@@ -105,6 +113,8 @@ ticket_node -> TicketAgent
  ↓
 TicketTools -> data/mock_tickets.json
  ↓
+response_node -> ResponseAgent
+ ↓
 compliance_node -> ComplianceAgent
  ↓
 返回工单编号和处理状态
@@ -120,6 +130,8 @@ LangGraph intent_node -> memory_query
 memory_node -> MemoryAgent
  ↓
 SessionMemory -> 当前 session 历史消息
+ ↓
+response_node -> ResponseAgent
  ↓
 compliance_node -> ComplianceAgent
  ↓
@@ -140,7 +152,12 @@ customer-service-agent/
 │   │   ├── refund_policy_agent.py
 │   │   ├── ticket_agent.py
 │   │   ├── memory_agent.py
+│   │   ├── response_agent.py
 │   │   └── compliance_agent.py
+│   ├── llm/
+│   │   ├── base.py
+│   │   ├── fake_client.py
+│   │   └── openai_compatible_client.py
 │   ├── graphs/
 │   │   └── customer_service_graph.py
 │   ├── memory/
@@ -179,6 +196,22 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+
+可选：配置真实 LLM。
+
+```bash
+cp .env.example .env
+```
+
+`.env` 示例：
+
+```env
+LLM_API_KEY=your-api-key
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_MODEL=gpt-4o-mini
+```
+
+默认测试和本地开发使用 `FakeLLMClient`，不会请求真实模型服务。接入真实模型时可使用 `OpenAICompatibleClient`。
 
 启动服务：
 
@@ -220,7 +253,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 {
   "reply": "你的订单A10001 (蓝牙耳机) 当前状态是已发货,预计送达时间为2026-07-05",
   "intent": "order_query",
-  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "OrderAgent", "OrderTools", "ComplianceAgent"]
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "OrderAgent", "OrderTools", "ResponseAgent", "ComplianceAgent"]
 }
 ```
 
@@ -238,7 +271,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 {
   "reply": "普通商品支持签收后 7 天内无理由退货；商品需要保持完好，不影响二次销售，并包含完整配件、包装和发票；退款会在仓库验收通过后 1-3 个工作日内原路退回。",
   "intent": "refund_policy",
-  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "RefundPolicyAgent", "KnowledgeBase", "ComplianceAgent"]
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "RefundPolicyAgent", "KnowledgeBase", "ResponseAgent", "ComplianceAgent"]
 }
 ```
 
@@ -256,7 +289,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 {
   "reply": "已为你创建工单 T10001,当前状态是待处理， 我们会尽快安排客服跟进。",
   "intent": "ticket_create",
-  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "TicketAgent", "TicketTools", "ComplianceAgent"]
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "TicketAgent", "TicketTools", "ResponseAgent", "ComplianceAgent"]
 }
 ```
 
@@ -274,7 +307,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 {
   "reply": "你的工单 T10001 当前状态是待处理。",
   "intent": "ticket_query",
-  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "TicketAgent", "TicketTools", "ComplianceAgent"]
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "TicketAgent", "TicketTools", "ResponseAgent", "ComplianceAgent"]
 }
 ```
 
@@ -302,7 +335,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 {
   "reply": "你刚才问的是：我的订单什么时候到？",
   "intent": "memory_query",
-  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "MemoryAgent", "ComplianceAgent"]
+  "trace": ["ChatAPI", "Supervisor", "IntentAgent", "MemoryAgent", "ResponseAgent", "ComplianceAgent"]
 }
 ```
 
@@ -323,6 +356,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 - `ComplianceAgent` 脱敏和人工转接风险识别
 - `SessionMemory` 短期会话记忆
 - `MemoryAgent` 基于 SessionMemory 回答历史问题
+- `ResponseAgent` 基于 LLMClient 生成客服回复，并在 LLM 异常时回退到原始回复
 - `LangGraph StateGraph` 多 Agent 图编排
 - `Supervisor` 图执行入口和 API 适配
 
@@ -335,6 +369,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 - 工单测试通过 pytest `tmp_path` 隔离测试数据，避免污染 `data/mock_tickets.json`
 - 使用内存版 `SessionMemory` 保存同一 session 下的用户消息和助手回复
 - 通过 `MemoryAgent` 支持基于 session 的历史问题查询
+- 通过 `ResponseAgent` 接入 OpenAI-compatible LLM，让模型参与客服回复生成，但业务事实仍来自工具层
 - 所有最终回复都会经过 `ComplianceAgent`，具备基础脱敏和风险识别能力
 - `trace` 字段展示 LangGraph 节点和 Agent 调用链，方便调试、演示和后续接入 OpenTelemetry
 

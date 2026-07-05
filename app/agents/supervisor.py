@@ -6,12 +6,19 @@ from app.agents.order_agent import OrderAgent
 from app.agents.refund_policy_agent import RefundPolicyAgent
 from app.agents.ticket_agent import TicketAgent
 from app.graphs.customer_service_graph import create_customer_service_graph
+from app.llm.base import BaseLLMClient
+from app.llm.factory import create_llm_client
 from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest, ChatResponse
 
 
 class Supervisor:
-    def __init__(self, tickets_file: Path | None = None, memory: SessionMemory | None = None) -> None:
+    def __init__(
+        self,
+        tickets_file: Path | None = None,
+        memory: SessionMemory | None = None,
+        llm_client: BaseLLMClient | None = None,
+    ) -> None:
         self.memory = memory or SessionMemory()
 
         self.graph = create_customer_service_graph(
@@ -21,6 +28,7 @@ class Supervisor:
             ticket_agent=TicketAgent(tickets_file=tickets_file) if tickets_file else TicketAgent(),
             compliance_agent=ComplianceAgent(),
             memory=self.memory,
+            llm_client=llm_client or create_llm_client(),
         )
 
     def handle(self, request: ChatRequest) -> ChatResponse:

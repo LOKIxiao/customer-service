@@ -39,6 +39,7 @@ def test_supervisor_handles_refund_policy():
         "IntentAgent",
         "RefundPolicyAgent",
         "KnowledgeBase",
+        "ResponseAgent",
         "ComplianceAgent",
     ]
 
