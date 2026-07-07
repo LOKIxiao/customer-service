@@ -10,6 +10,8 @@ from app.llm.base import BaseLLMClient
 from app.llm.factory import create_llm_client
 from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest, ChatResponse
+from app.agents.hybrid_intent_agent import HybridIntentAgent
+from app.agents.llm_intent_agent import LLMIntentAgent
 
 
 class Supervisor:
@@ -20,15 +22,19 @@ class Supervisor:
         llm_client: BaseLLMClient | None = None,
     ) -> None:
         self.memory = memory or SessionMemory()
+        llm = llm_client or create_llm_client()
 
         self.graph = create_customer_service_graph(
-            intent_agent=IntentAgent(),
+            intent_agent=HybridIntentAgent(
+                llm_intent_agent=LLMIntentAgent(llm),
+                rule_intent_agent=IntentAgent(),
+            ),
             order_agent=OrderAgent(),
             refund_policy_agent=RefundPolicyAgent(),
             ticket_agent=TicketAgent(tickets_file=tickets_file) if tickets_file else TicketAgent(),
             compliance_agent=ComplianceAgent(),
             memory=self.memory,
-            llm_client=llm_client or create_llm_client(),
+            llm_client=llm,
         )
 
     def handle(self, request: ChatRequest) -> ChatResponse:

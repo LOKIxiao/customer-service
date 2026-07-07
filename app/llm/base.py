@@ -10,3 +10,7 @@ class BaseLLMClient(ABC):
         raw_reply: str,
     ) -> str:
         pass
+
+    @abstractmethod
+    def classify_intent(self, message: str) -> str:
+        pass

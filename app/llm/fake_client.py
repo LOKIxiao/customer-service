@@ -9,3 +9,13 @@ class FakeLLMClient(BaseLLMClient):
         raw_reply: str,
     ) -> str:
         return raw_reply
+
+    def classify_intent(self, message: str) -> str:
+        return """
+{
+  "intent": "unknown",
+  "confidence": 0.0,
+  "slots": {},
+  "need_clarification": true
+}
+""".strip()

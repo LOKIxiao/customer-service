@@ -1,10 +1,15 @@
 from app.agents.supervisor import Supervisor
+from app.llm.fake_client import FakeLLMClient
 from app.memory.session_memory import SessionMemory
 from app.schemas.chat import ChatRequest
 
 
+def create_test_supervisor(**kwargs):
+    return Supervisor(llm_client=FakeLLMClient(), **kwargs)
+
+
 def test_supervisor_handles_order_query():
-    supervisor = Supervisor()
+    supervisor = create_test_supervisor()
 
     response = supervisor.handle(
         ChatRequest(
@@ -21,7 +26,7 @@ def test_supervisor_handles_order_query():
 
 
 def test_supervisor_handles_refund_policy():
-    supervisor = Supervisor()
+    supervisor = create_test_supervisor()
 
     response = supervisor.handle(
         ChatRequest(
@@ -45,7 +50,7 @@ def test_supervisor_handles_refund_policy():
 
 def test_supervisor_handles_ticket_create(tmp_path):
     tickets_file = tmp_path / "mock_tickets.json"
-    supervisor = Supervisor(tickets_file=tickets_file)
+    supervisor = create_test_supervisor(tickets_file=tickets_file)
 
     response = supervisor.handle(
         ChatRequest(
@@ -63,7 +68,7 @@ def test_supervisor_handles_ticket_create(tmp_path):
 
 def test_supervisor_records_conversation_memory():
     memory = SessionMemory()
-    supervisor = Supervisor(memory=memory)
+    supervisor = create_test_supervisor(memory=memory)
 
     response = supervisor.handle(
         ChatRequest(
@@ -83,7 +88,7 @@ def test_supervisor_records_conversation_memory():
 
 
 def test_supervisor_handles_memory_query():
-    supervisor = Supervisor()
+    supervisor = create_test_supervisor()
 
     supervisor.handle(
         ChatRequest(

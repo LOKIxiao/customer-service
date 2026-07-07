@@ -6,7 +6,7 @@
 
 ## 功能
 
-- 意图识别：识别订单查询、退款政策、工单创建、工单查询、人工客服等意图
+- 意图识别：通过 HybridIntentAgent 结合 Qwen 结构化意图识别和规则兜底，识别订单查询、退款政策、工单创建、工单查询、人工客服等意图
 - 订单查询：根据 `user_id` 查询 mock 订单数据，避免越权查询其他用户订单
 - 退款政策问答：基于本地知识库文件回答退款、退货、到账时效等问题
 - 工单处理：支持创建投诉工单和查询最近工单状态
@@ -29,7 +29,7 @@ Supervisor
  ↓
 LangGraph StateGraph
  ├── SessionMemory
- ├── intent_node -> IntentAgent
+ ├── intent_node -> HybridIntentAgent -> LLMIntentAgent / RuleIntentAgent
  ├── order_node -> OrderAgent -> OrderTools
  ├── refund_node -> RefundPolicyAgent -> KnowledgeBase
  ├── ticket_node -> TicketAgent -> TicketTools
@@ -71,7 +71,7 @@ ChatAPI
  ↓
 Supervisor
  ↓
-LangGraph intent_node -> order_query
+LangGraph intent_node -> HybridIntentAgent -> order_query
  ↓
 order_node -> OrderAgent
  ↓
@@ -89,7 +89,7 @@ compliance_node -> ComplianceAgent
 ```text
 用户：怎么退款？
  ↓
-LangGraph intent_node -> refund_policy
+LangGraph intent_node -> HybridIntentAgent -> refund_policy
  ↓
 refund_node -> RefundPolicyAgent
  ↓
@@ -107,7 +107,7 @@ compliance_node -> ComplianceAgent
 ```text
 用户：我要投诉，商品坏了
  ↓
-LangGraph intent_node -> ticket_create
+LangGraph intent_node -> HybridIntentAgent -> ticket_create
  ↓
 ticket_node -> TicketAgent
  ↓
@@ -125,7 +125,7 @@ compliance_node -> ComplianceAgent
 ```text
 用户：刚才我问了什么？
  ↓
-LangGraph intent_node -> memory_query
+LangGraph intent_node -> HybridIntentAgent -> memory_query
  ↓
 memory_node -> MemoryAgent
  ↓
@@ -148,6 +148,8 @@ customer-service-agent/
 │   ├── agents/
 │   │   ├── supervisor.py
 │   │   ├── intent_agent.py
+│   │   ├── llm_intent_agent.py
+│   │   ├── hybrid_intent_agent.py
 │   │   ├── order_agent.py
 │   │   ├── refund_policy_agent.py
 │   │   ├── ticket_agent.py
@@ -350,6 +352,8 @@ curl -X POST http://127.0.0.1:8000/chat \
 当前测试覆盖：
 
 - `IntentAgent` 意图识别
+- `LLMIntentAgent` 结构化 JSON 意图识别
+- `HybridIntentAgent` LLM 意图识别与规则兜底
 - `OrderAgent` 订单查询和越权查询拦截
 - `RefundPolicyAgent` 退款政策回复
 - `TicketAgent` 工单创建和查询
@@ -364,6 +368,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 
 - 使用 LangGraph StateGraph 实现多 Agent 编排，API 层只负责接收请求和返回响应
 - 通过条件边根据 `intent` 动态路由到订单、退款、工单、记忆或兜底节点
+- 采用 `HybridIntentAgent` 将 Qwen 结构化意图识别与规则意图识别结合，通过合法 intent 白名单、置信度阈值和 fallback 策略降低模型输出不稳定影响
 - Agent 层与工具层分离，便于后续替换真实订单系统、工单系统和知识库服务
 - 订单查询按 `user_id` 做权限校验，避免越权访问其他用户订单
 - 工单测试通过 pytest `tmp_path` 隔离测试数据，避免污染 `data/mock_tickets.json`
@@ -377,7 +382,7 @@ curl -X POST http://127.0.0.1:8000/chat \
 
 - 将内存版 SessionMemory 替换为 Redis，实现可持久化的短期会话记忆
 - 使用向量数据库将退款政策问答升级为 RAG
-- 接入真实 LLM，实现更灵活的意图识别和回复生成
+- 引入 LLM 深度合规审查，补充当前规则合规审查
 - 引入 OpenTelemetry 记录 Agent 调用链和工具耗时
 - 增加前端聊天页面，展示用户对话和 Agent 执行过程
 - 接入真实 MCP 工具层，统一订单、工单、风控、知识库等工具调用协议

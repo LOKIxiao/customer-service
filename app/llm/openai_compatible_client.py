@@ -51,4 +51,44 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         response = self.llm.invoke(prompt)
         return response.content.strip()
+    
+    def classify_intent(self, message: str) -> str:
+        prompt = f"""
+你是一个智能客服意图识别助手 Agent，
 
+请根据用户消息识别意图，并且只返回 JSON，不要输出任何解释。
+
+允许的 intent 只有：
+- order_query
+- refund_policy
+- ticket_create
+- ticket_query
+- memory_query
+- human_handoff
+- unknown
+
+
+字段要求：
+— intent: 字符串
+- confidence: 0 到 1 之间的小数
+- slots: 对象，提取订单号等关键信息，没有则为空对象
+- need_clarification: 布尔值
+
+示例：
+{{
+  "intent": "order_query",
+  "confidence": 0.92,
+  "slots": {{
+    "order_id": "A10001"
+  }},
+  "need_clarification": false
+}}
+
+用户消息：
+{message}
+""".strip()
+        
+        response = self.llm.invoke(prompt)
+        return response.content.strip()
+
+        
