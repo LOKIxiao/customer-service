@@ -1,0 +1,39 @@
+[
+  {"query": "怎么退款？", "expected_source": "refund_policy.md"},
+  {"query": "退货运费谁承担", "expected_source": "refund_policy.md"},
+  {"query": "退款多久能到账", "expected_source": "refund_policy.md"},
+  {"query": "东西用坏了还能退吗，不是我自己弄坏的", "expected_source": "refund_policy.md"},
+
+  {"query": "多久能发货", "expected_source": "shipping_policy.md"},
+  {"query": "偏远地区要收运费吗", "expected_source": "shipping_policy.md"},
+  {"query": "包裹外包装破损了怎么处理", "expected_source": "shipping_policy.md"},
+  {"query": "下单之后地址填错了能改吗", "expected_source": "shipping_policy.md"},
+
+  {"query": "怎么开发票", "expected_source": "invoice_policy.md"},
+  {"query": "忘记开发票了还能补吗", "expected_source": "invoice_policy.md"},
+  {"query": "公司想要专用发票需要提供什么资料", "expected_source": "invoice_policy.md"},
+
+  {"query": "耳机保修多久", "expected_source": "warranty_policy.md"},
+  {"query": "键盘坏了保修期是多久", "expected_source": "warranty_policy.md"},
+  {"query": "自己拆机维修过还能享受保修吗", "expected_source": "warranty_policy.md"},
+  {"query": "可以额外购买延长保修服务吗", "expected_source": "warranty_policy.md"},
+
+  {"query": "忘记密码怎么办", "expected_source": "account_security.md"},
+  {"query": "换手机号了怎么改绑定", "expected_source": "account_security.md"},
+  {"query": "怀疑账号被盗了怎么处理", "expected_source": "account_security.md"},
+
+  {"query": "会员等级怎么算的", "expected_source": "membership_policy.md"},
+  {"query": "积分怎么抵扣使用", "expected_source": "membership_policy.md"},
+  {"query": "钻石会员有什么专属权益", "expected_source": "membership_policy.md"},
+  {"query": "退货了积分会不会被扣掉", "expected_source": "membership_policy.md"},
+
+  {"query": "优惠券能叠加使用吗", "expected_source": "promotion_policy.md"},
+  {"query": "大促降价了能申请补差价吗", "expected_source": "promotion_policy.md"},
+  {"query": "优惠券显示不能用是什么原因", "expected_source": "promotion_policy.md"},
+  {"query": "优惠券可以送给朋友用吗", "expected_source": "promotion_policy.md"},
+
+  {"query": "耳机连不上手机怎么办", "expected_source": "troubleshooting_faq.md"},
+  {"query": "耳机只有一边有声音", "expected_source": "troubleshooting_faq.md"},
+  {"query": "键盘进水了怎么处理", "expected_source": "troubleshooting_faq.md"},
+  {"query": "键盘灯效没办法自定义颜色", "expected_source": "troubleshooting_faq.md"}
+]
