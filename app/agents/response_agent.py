@@ -10,12 +10,14 @@ class ResponseAgent:
         user_message: str,
         intent: str,
         raw_reply: str,
+        long_term_context: str = "",
     ) -> str:
         try:
             return self.llm_client.generate_customer_reply(
                 user_message=user_message,
                 intent=intent,
                 raw_reply=raw_reply,
+                long_term_context=long_term_context,
             )
         except Exception:
             return raw_reply

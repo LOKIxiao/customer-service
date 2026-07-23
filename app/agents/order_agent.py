@@ -1,21 +1,22 @@
-from app.tools.order_tools import get_latest_order_by_user, get_order_by_id
-
-
+from typing import Any
 
 
 class OrderAgent:
+    def __init__(self, mcp_client: Any) -> None:
+        self.mcp_client = mcp_client
+
     def handle(self, user_id: str, slots: dict[str, str]) -> str:
         order_id = slots.get('order_id')
-        
-        if order_id:
-            order = get_order_by_id(user_id=user_id, order_id=order_id)
-        else:
-            order = get_latest_order_by_user(user_id=user_id)
-        
-        if order is None:
+
+        result = self.mcp_client.call_tool(
+            "get_order",
+            {"user_id": user_id, "order_id": order_id},
+        )
+
+        if not result["found"]:
             return '没有查询到你的订单信息，请确认订单号是否正确，或稍后转人工客服处理。'
 
-        return self._build_order_reply(order)
+        return self._build_order_reply(result["order"])
     
 
     def _build_order_reply(self, order: dict) ->str:

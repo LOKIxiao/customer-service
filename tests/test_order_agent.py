@@ -1,8 +1,9 @@
 from app.agents.order_agent import OrderAgent
+from app.mcp.fake_client import FakeMCPToolClient
 
 
 def test_order_agent_gets_latest_order():
-    agent = OrderAgent()
+    agent = OrderAgent(mcp_client=FakeMCPToolClient())
 
     reply = agent.handle(user_id="u_001", slots={})
 
@@ -12,7 +13,7 @@ def test_order_agent_gets_latest_order():
 
 
 def test_order_agent_blocks_other_user_order():
-    agent = OrderAgent()
+    agent = OrderAgent(mcp_client=FakeMCPToolClient())
 
     reply = agent.handle(user_id="u_001", slots={"order_id": "A10002"})
 

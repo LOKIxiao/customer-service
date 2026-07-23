@@ -5,7 +5,9 @@ class StaticLLMClient:
     def __init__(self, intent_json: str) -> None:
         self.intent_json = intent_json
 
-    def generate_customer_reply(self, user_message: str, intent: str, raw_reply: str) -> str:
+    def generate_customer_reply(
+        self, user_message: str, intent: str, raw_reply: str, long_term_context: str = ""
+    ) -> str:
         return raw_reply
 
     def classify_intent(self, message: str) -> str:

@@ -7,6 +7,7 @@ class FakeLLMClient(BaseLLMClient):
         user_message: str,
         intent: str,
         raw_reply: str,
+        long_term_context: str = "",
     ) -> str:
         return raw_reply
 
@@ -19,3 +20,6 @@ class FakeLLMClient(BaseLLMClient):
   "need_clarification": true
 }
 """.strip()
+
+    def extract_user_facts(self, user_message: str, assistant_reply: str) -> str:
+        return '{"facts": []}'

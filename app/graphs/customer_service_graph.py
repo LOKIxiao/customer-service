@@ -1,16 +1,17 @@
-from typing import TypedDict
+from typing import Any, TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from app.agents.compliance_agent import ComplianceAgent
 from app.agents.intent_agent import IntentAgent
+from app.agents.long_term_memory_agent import LongTermMemoryAgent
 from app.agents.memory_agent import MemoryAgent
+from app.agents.memory_extraction_agent import MemoryExtractionAgent
 from app.agents.order_agent import OrderAgent
-from app.agents.refund_policy_agent import RefundPolicyAgent
 from app.agents.response_agent import ResponseAgent
 from app.agents.ticket_agent import TicketAgent
 from app.llm.base import BaseLLMClient
 from app.memory.session_memory import SessionMemory
+from app.agents.rag_agent import RAGAgent
 
 
 class CustomerServiceState(TypedDict):
@@ -20,6 +21,7 @@ class CustomerServiceState(TypedDict):
     intent: str
     slots: dict[str, str]
     raw_reply: str
+    long_term_context: str
     final_reply: str
     trace: list[str]
 
@@ -27,9 +29,11 @@ class CustomerServiceState(TypedDict):
 def create_customer_service_graph(
     intent_agent: IntentAgent,
     order_agent: OrderAgent,
-    refund_policy_agent: RefundPolicyAgent,
+    rag_agent: RAGAgent,
     ticket_agent: TicketAgent,
-    compliance_agent: ComplianceAgent,
+    long_term_memory_agent: LongTermMemoryAgent,
+    memory_extraction_agent: MemoryExtractionAgent,
+    mcp_client: Any,
     memory: SessionMemory,
     llm_client: BaseLLMClient,
 ):
@@ -46,21 +50,21 @@ def create_customer_service_graph(
             "slots": intent_result.slots,
             "trace": state["trace"] + ["IntentAgent"],
         }
-    
+
     def order_node(state: CustomerServiceState) -> CustomerServiceState:
         raw_reply = order_agent.handle(state["user_id"], state["slots"])
         return {
             **state,
             "raw_reply": raw_reply,
-            "trace": state["trace"] + ["OrderAgent", "OrderTools"],
+            "trace": state["trace"] + ["OrderAgent", "MCP:get_order"],
         } # 生成回复
-    
-    def refund_node(state: CustomerServiceState) -> CustomerServiceState:
-        raw_reply = refund_policy_agent.handle(state["message"])
+
+    def knowledge_node(state: CustomerServiceState) -> CustomerServiceState:
+        raw_reply = rag_agent.handle(state["message"])
         return {
             **state,
             "raw_reply": raw_reply,
-            "trace": state["trace"] + ["RefundPolicyAgent", "KnowledgeBase"],
+            "trace": state["trace"] + ["RAGAgent", "MCP:search_knowledge_base"],
         }
 
     def ticket_node(state: CustomerServiceState) -> CustomerServiceState:
@@ -69,12 +73,13 @@ def create_customer_service_graph(
             intent=state["intent"],
             message=state["message"],
         )
+        tool_name = "create_ticket" if state["intent"] == "ticket_create" else "query_ticket"
         return {
             **state,
             "raw_reply": raw_reply,
-            "trace": state["trace"] + ["TicketAgent", "TicketTools"],
+            "trace": state["trace"] + ["TicketAgent", f"MCP:{tool_name}"],
         }
-    
+
     def memory_node(state: CustomerServiceState) -> CustomerServiceState:
         raw_reply = memory_agent.handle(state["session_id"])
         return {
@@ -87,11 +92,20 @@ def create_customer_service_graph(
         raw_reply = f"我识别到你的意图是 {state['intent']}，但这个业务 Agent 还没有接入。"
         return {**state, "raw_reply": raw_reply}
 
+    def memory_recall_node(state: CustomerServiceState) -> CustomerServiceState:
+        long_term_context = long_term_memory_agent.recall(state["user_id"], state["message"])
+        return {
+            **state,
+            "long_term_context": long_term_context,
+            "trace": state["trace"] + ["LongTermMemoryAgent", "MCP:recall_user_memory"],
+        }
+
     def response_node(state: CustomerServiceState) -> CustomerServiceState:
         reply = response_agent.generate(
             user_message=state["message"],
             intent=state["intent"],
             raw_reply=state["raw_reply"],
+            long_term_context=state["long_term_context"],
         )
         return {
             **state,
@@ -100,40 +114,52 @@ def create_customer_service_graph(
         }
 
     def compliance_node(state: CustomerServiceState) -> CustomerServiceState:
-        result = compliance_agent.review(state["raw_reply"])
-        memory.add_message(state["session_id"], "assistant", result.response)
+        result = mcp_client.call_tool("review_compliance", {"text": state["raw_reply"]})
+        memory.add_message(state["session_id"], "assistant", result["response"])
 
         return {
             **state,
-            "final_reply": result.response,
-            "trace": state["trace"] + ["ComplianceAgent"],
+            "final_reply": result["response"],
+            "trace": state["trace"] + ["ComplianceAgent", "MCP:review_compliance"],
         }
-    
+
+    def memory_extraction_node(state: CustomerServiceState) -> CustomerServiceState:
+        facts = memory_extraction_agent.extract(state["message"], state["final_reply"])
+        trace = state["trace"] + ["MemoryExtractionAgent"]
+
+        if facts:
+            long_term_memory_agent.remember(state["user_id"], facts)
+            trace = trace + ["MCP:save_user_memory"]
+
+        return {**state, "trace": trace}
+
     # 路由器，分配
     def route_by_intent(state: CustomerServiceState) -> str:
         intent = state["intent"]
 
         if intent == "order_query":
             return "order"
-        if intent == "refund_policy":
-            return "refund"
+        if intent == "knowledge_base_query":
+            return "knowledge"
         if intent in ["ticket_create", "ticket_query"]:
             return "ticket"
         if intent == "memory_query":
             return "memory"
 
         return "fallback"
-    
+
     graph = StateGraph(CustomerServiceState)
 
     graph.add_node("intent", intent_node)
     graph.add_node("order", order_node)
-    graph.add_node("refund", refund_node)
+    graph.add_node("knowledge", knowledge_node)
     graph.add_node("ticket", ticket_node)
     graph.add_node("memory", memory_node)
     graph.add_node("fallback", fallback_node)
+    graph.add_node("memory_recall", memory_recall_node)
     graph.add_node("response", response_node)
     graph.add_node("compliance", compliance_node)
+    graph.add_node("memory_extraction", memory_extraction_node)
 
     #首先intent节点处理
     graph.set_entry_point("intent")
@@ -143,21 +169,23 @@ def create_customer_service_graph(
         route_by_intent,
         {
             "order": "order",
-            "refund": "refund",
+            "knowledge": "knowledge",
             "ticket": "ticket",
             "memory": "memory",
             "fallback": "fallback",
         },
     )
 
-    graph.add_edge("order", "response")
-    graph.add_edge("refund", "response")
-    graph.add_edge("ticket", "response")
-    graph.add_edge("memory", "response")
-    graph.add_edge("fallback", "response")
+    graph.add_edge("order", "memory_recall")
+    graph.add_edge("knowledge", "memory_recall")
+    graph.add_edge("ticket", "memory_recall")
+    graph.add_edge("memory", "memory_recall")
+    graph.add_edge("fallback", "memory_recall")
+    graph.add_edge("memory_recall", "response")
     graph.add_edge("response", "compliance")
     # 返回compliance节点，减少幻觉
-    graph.add_edge("compliance", END)
-    
+    graph.add_edge("compliance", "memory_extraction")
+    graph.add_edge("memory_extraction", END)
+
 
     return graph.compile()

@@ -20,6 +20,7 @@ class BrokenLLMClient:
         user_message: str,
         intent: str,
         raw_reply: str,
+        long_term_context: str = "",
     ) -> str:
         raise RuntimeError("LLM service unavailable")
 

@@ -6,7 +6,7 @@ from app.schemas.intent import IntentResult
 
 ALLOWED_INTENTS = {
     'order_query',
-    'refund_policy',
+    'knowledge_base_query',
     'ticket_create',
     'ticket_query',
     'memory_query',

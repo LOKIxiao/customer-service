@@ -1,18 +1,15 @@
-from pathlib import Path
-
-from app.tools.ticket_tools import TICKETS_FILE, create_ticket, get_latest_ticket_by_user
+from typing import Any
 
 
 class TicketAgent:
-    def __init__(self, tickets_file: Path = TICKETS_FILE) -> None:
-        self.tickets_file = tickets_file
+    def __init__(self, mcp_client: Any) -> None:
+        self.mcp_client = mcp_client
 
     def handle(self, user_id: str, intent: str, message: str) -> str:
         if intent == "ticket_create":
-            ticket = create_ticket(
-                user_id=user_id,
-                content=message,
-                file_path=self.tickets_file,
+            ticket = self.mcp_client.call_tool(
+                "create_ticket",
+                {"user_id": user_id, "content": message},
             )
 
             return (
@@ -21,14 +18,12 @@ class TicketAgent:
             )
 
         if intent == "ticket_query":
-            ticket = get_latest_ticket_by_user(
-                user_id=user_id,
-                file_path=self.tickets_file,
-            )
+            result = self.mcp_client.call_tool("query_ticket", {"user_id": user_id})
 
-            if ticket is None:
+            if not result["found"]:
                 return "暂时没有查到你的工单记录。"
 
+            ticket = result["ticket"]
             status_text = self._translate_status(ticket.get("status", "unknown"))
 
             return f"你的工单 {ticket['ticket_id']} 当前状态是{status_text}。"

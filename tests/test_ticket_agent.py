@@ -1,9 +1,10 @@
 from app.agents.ticket_agent import TicketAgent
+from app.mcp.fake_client import FakeMCPToolClient
 
 
 def test_ticket_agent_creates_ticket(tmp_path):
     tickets_file = tmp_path / "mock_tickets.json"
-    agent = TicketAgent(tickets_file=tickets_file)
+    agent = TicketAgent(mcp_client=FakeMCPToolClient(tickets_file=tickets_file))
 
     reply = agent.handle(
         user_id="u_test",
@@ -17,7 +18,7 @@ def test_ticket_agent_creates_ticket(tmp_path):
 
 def test_ticket_agent_queries_latest_ticket(tmp_path):
     tickets_file = tmp_path / "mock_tickets.json"
-    agent = TicketAgent(tickets_file=tickets_file)
+    agent = TicketAgent(mcp_client=FakeMCPToolClient(tickets_file=tickets_file))
 
     agent.handle(
         user_id="u_query_test",

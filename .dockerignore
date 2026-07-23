@@ -4,6 +4,10 @@ __pycache__/
 .env
 .pytest_cache/
 .DS_Store
+.git/
+.gitignore
+tests/
+INTERVIEW_PREP.md
 data/chroma_db/
 data/chroma_db_eval/
 data/user_memory_db/

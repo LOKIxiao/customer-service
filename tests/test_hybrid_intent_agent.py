@@ -13,7 +13,7 @@ class FakeLLMIntentAgent:
 
 def test_hybrid_intent_agent_uses_high_confidence_llm_result():
     llm_result = IntentResult(
-        intent="refund_policy",
+        intent="knowledge_base_query",
         confidence=0.9,
         slots={},
         need_clarification=False,
@@ -26,7 +26,7 @@ def test_hybrid_intent_agent_uses_high_confidence_llm_result():
 
     result = agent.classify("我的订单什么时候到？")
 
-    assert result.intent == "refund_policy"
+    assert result.intent == "knowledge_base_query"
 
 
 def test_hybrid_intent_agent_fallbacks_to_rule_when_low_confidence():
@@ -55,4 +55,4 @@ def test_hybrid_intent_agent_fallbacks_to_rule_when_llm_returns_none():
 
     result = agent.classify("怎么退款？")
 
-    assert result.intent == "refund_policy"
+    assert result.intent == "knowledge_base_query"
