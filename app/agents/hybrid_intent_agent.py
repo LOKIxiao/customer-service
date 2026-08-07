@@ -15,8 +15,15 @@ class HybridIntentAgent:
         self.rule_intent_agent = rule_intent_agent
         self.confidence_threshold = confidence_threshold
 
-    def classify(self, message: str) -> IntentResult:
-        llm_result = self.llm_intent_agent.classify(message)
+    def classify(
+        self,
+        message: str,
+        conversation_history: str = "",
+    ) -> IntentResult:
+        llm_result = self.llm_intent_agent.classify(
+            message,
+            conversation_history=conversation_history,
+        )
 
         if llm_result and llm_result.confidence >= self.confidence_threshold:
             return llm_result

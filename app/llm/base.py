@@ -9,6 +9,7 @@ class BaseLLMClient(ABC):
         intent: str,
         raw_reply: str,
         long_term_context: str = "",
+        conversation_history: str = "",
     ) -> str:
         pass
 

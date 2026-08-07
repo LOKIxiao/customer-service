@@ -78,6 +78,7 @@ def test_supervisor_handles_knowledge_base_query():
     assert response.trace == [
         "ChatAPI",
         "Supervisor",
+        "InputSanitizer",
         "IntentAgent",
         "RAGAgent",
         "MCP:search_knowledge_base",
@@ -161,6 +162,28 @@ def test_supervisor_records_conversation_memory():
     assert messages[0].content == "我的订单什么时候到？"
     assert messages[1].role == "assistant"
     assert messages[1].content == response.reply
+
+
+def test_supervisor_masks_pii_before_memory_and_trace():
+    # 输入脱敏前置：用户消息里的手机号在写入会话记忆、进入 LLM 链路之前
+    # 就应被打码；trace 里能看到 InputSanitizer 节点先于 IntentAgent 执行。
+    memory = SessionMemory()
+    supervisor = create_test_supervisor(memory=memory)
+
+    response = supervisor.handle(
+        ChatRequest(
+            user_id="u_001",
+            session_id="s_pii",
+            message="我要投诉，我的手机号是 13812345678",
+        )
+    )
+
+    stored_user_message = memory.get_messages("s_pii")[0].content
+    assert "13812345678" not in stored_user_message
+    assert "138****5678" in stored_user_message
+
+    assert "InputSanitizer" in response.trace
+    assert response.trace.index("InputSanitizer") < response.trace.index("IntentAgent")
 
 
 def test_supervisor_handles_memory_query():

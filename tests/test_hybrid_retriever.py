@@ -2,6 +2,12 @@ from app.rag.chroma_vector_store import ChromaVectorStore
 from app.rag.document_loader import DocumentLoader
 from app.rag.embedding import FakeEmbeddingClient
 from app.rag.hybrid_retriever import HybridKnowledgeRetriever
+from app.rag.reranker import BaseReranker
+
+
+class ReverseReranker(BaseReranker):
+    def rerank(self, query, candidates, top_k):
+        return list(reversed(candidates))[:top_k]
 
 
 def _make_retriever(kb_dir, persist_directory):
@@ -68,3 +74,25 @@ def test_hybrid_retriever_lazy_loads_only_once(tmp_path):
     second = retriever.retrieve("怎么退款")
 
     assert [chunk.chunk_id for chunk in first] == [chunk.chunk_id for chunk in second]
+
+
+def test_hybrid_retriever_applies_reranker_after_rrf(tmp_path):
+    kb_dir = tmp_path / "knowledge_base"
+    kb_dir.mkdir()
+    (kb_dir / "a.md").write_text("# A\n\n退款政策第一条。", encoding="utf-8")
+    (kb_dir / "b.md").write_text("# B\n\n退款政策第二条。", encoding="utf-8")
+
+    baseline = _make_retriever(kb_dir, tmp_path / "baseline")
+    baseline_ids = [chunk.chunk_id for chunk in baseline.retrieve("退款", top_k=2)]
+    reranked = HybridKnowledgeRetriever(
+        document_loader=DocumentLoader(knowledge_dir=kb_dir),
+        vector_store=ChromaVectorStore(
+            FakeEmbeddingClient(), persist_directory=tmp_path / "reranked"
+        ),
+        reranker=ReverseReranker(),
+        rerank_candidate_k=2,
+    )
+
+    reranked_ids = [chunk.chunk_id for chunk in reranked.retrieve("退款", top_k=2)]
+
+    assert reranked_ids == list(reversed(baseline_ids))

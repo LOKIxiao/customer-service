@@ -7,7 +7,7 @@ class FakeLLMIntentAgent:
     def __init__(self, result):
         self.result = result
 
-    def classify(self, message: str):
+    def classify(self, message: str, conversation_history: str = ""):
         return self.result
 
 

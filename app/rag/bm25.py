@@ -6,7 +6,7 @@ import jieba
 from app.schemas.rag import DocumentChunk
 
 
-def _tokenize(text: str) -> list[str]:
+def tokenize(text: str) -> list[str]:
     return [token for token in jieba.cut_for_search(text) if token.strip()]
 
 
@@ -18,7 +18,7 @@ class BM25Index:
         self.b = b
         self.chunks = chunks
 
-        self._doc_tokens = [_tokenize(chunk.content) for chunk in chunks]
+        self._doc_tokens = [tokenize(chunk.content) for chunk in chunks]
         self._doc_len = [len(tokens) for tokens in self._doc_tokens]
         self._avg_len = sum(self._doc_len) / len(self._doc_len) if self._doc_len else 0.0
 
@@ -37,7 +37,7 @@ class BM25Index:
         if not self.chunks:
             return []
 
-        query_terms = _tokenize(query)
+        query_terms = tokenize(query)
         scored: list[tuple[DocumentChunk, float]] = []
 
         for idx, tokens in enumerate(self._doc_tokens):

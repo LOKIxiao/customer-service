@@ -5,12 +5,30 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      REDIS_ENABLED: "true"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
     volumes:
       - chroma_data:/app/data/chroma_db
       - chroma_eval_data:/app/data/chroma_db_eval
       - user_memory_data:/app/data/user_memory_db
 
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - redis_data:/data
+
 volumes:
   chroma_data:
   chroma_eval_data:
   user_memory_data:
+  redis_data:

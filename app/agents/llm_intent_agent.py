@@ -19,9 +19,18 @@ class LLMIntentAgent:
     def __init__(self, llm_client: BaseLLMClient) -> None:
         self.llm_client = llm_client
 
-    def classify(self, message: str) -> IntentResult | None:
+    def classify(
+        self,
+        message: str,
+        conversation_history: str = "",
+    ) -> IntentResult | None:
+        contextual_message = (
+            f"【最近对话】\n{conversation_history}\n\n【当前用户消息】\n{message}"
+            if conversation_history
+            else message
+        )
         try:
-            raw_result = self.llm_client.classify_intent(message)
+            raw_result = self.llm_client.classify_intent(contextual_message)
             data = json.loads(raw_result)
 
         except Exception:

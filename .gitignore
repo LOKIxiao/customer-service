@@ -7,3 +7,4 @@ __pycache__/
 data/chroma_db/
 data/chroma_db_eval/
 data/user_memory_db/
+data/eval/answer_evaluation_report.json

@@ -11,6 +11,7 @@ class ResponseAgent:
         intent: str,
         raw_reply: str,
         long_term_context: str = "",
+        conversation_history: str = "",
     ) -> str:
         try:
             return self.llm_client.generate_customer_reply(
@@ -18,6 +19,7 @@ class ResponseAgent:
                 intent=intent,
                 raw_reply=raw_reply,
                 long_term_context=long_term_context,
+                conversation_history=conversation_history,
             )
         except Exception:
             return raw_reply

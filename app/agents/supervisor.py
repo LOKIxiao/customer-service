@@ -11,6 +11,7 @@ from app.llm.base import BaseLLMClient
 from app.llm.factory import create_llm_client
 from app.mcp.factory import create_mcp_client
 from app.memory.session_memory import SessionMemory
+from app.memory.session_factory import create_session_memory
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.agents.hybrid_intent_agent import HybridIntentAgent
 from app.agents.llm_intent_agent import LLMIntentAgent
@@ -24,7 +25,7 @@ class Supervisor:
         llm_client: BaseLLMClient | None = None,
         mcp_client: Any | None = None,
     ) -> None:
-        self.memory = memory or SessionMemory()
+        self.memory = memory or create_session_memory()
         llm = llm_client or create_llm_client()
         self.mcp_client = mcp_client or create_mcp_client(tickets_file=tickets_file)
 
@@ -45,6 +46,7 @@ class Supervisor:
 
     def close(self) -> None:
         self.mcp_client.close()
+        self.memory.close()
 
     def handle(self, request: ChatRequest) -> ChatResponse:
         result = self.graph.invoke(
@@ -56,6 +58,7 @@ class Supervisor:
                 "slots": {},
                 "raw_reply": "",
                 "long_term_context": "",
+                "conversation_history": "",
                 "final_reply": "",
                 "trace": ["ChatAPI", "Supervisor"],
             }

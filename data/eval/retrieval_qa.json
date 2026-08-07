@@ -1,39 +1,2214 @@
 [
-  {"query": "怎么退款？", "expected_source": "refund_policy.md"},
-  {"query": "退货运费谁承担", "expected_source": "refund_policy.md"},
-  {"query": "退款多久能到账", "expected_source": "refund_policy.md"},
-  {"query": "东西用坏了还能退吗，不是我自己弄坏的", "expected_source": "refund_policy.md"},
-
-  {"query": "多久能发货", "expected_source": "shipping_policy.md"},
-  {"query": "偏远地区要收运费吗", "expected_source": "shipping_policy.md"},
-  {"query": "包裹外包装破损了怎么处理", "expected_source": "shipping_policy.md"},
-  {"query": "下单之后地址填错了能改吗", "expected_source": "shipping_policy.md"},
-
-  {"query": "怎么开发票", "expected_source": "invoice_policy.md"},
-  {"query": "忘记开发票了还能补吗", "expected_source": "invoice_policy.md"},
-  {"query": "公司想要专用发票需要提供什么资料", "expected_source": "invoice_policy.md"},
-
-  {"query": "耳机保修多久", "expected_source": "warranty_policy.md"},
-  {"query": "键盘坏了保修期是多久", "expected_source": "warranty_policy.md"},
-  {"query": "自己拆机维修过还能享受保修吗", "expected_source": "warranty_policy.md"},
-  {"query": "可以额外购买延长保修服务吗", "expected_source": "warranty_policy.md"},
-
-  {"query": "忘记密码怎么办", "expected_source": "account_security.md"},
-  {"query": "换手机号了怎么改绑定", "expected_source": "account_security.md"},
-  {"query": "怀疑账号被盗了怎么处理", "expected_source": "account_security.md"},
-
-  {"query": "会员等级怎么算的", "expected_source": "membership_policy.md"},
-  {"query": "积分怎么抵扣使用", "expected_source": "membership_policy.md"},
-  {"query": "钻石会员有什么专属权益", "expected_source": "membership_policy.md"},
-  {"query": "退货了积分会不会被扣掉", "expected_source": "membership_policy.md"},
-
-  {"query": "优惠券能叠加使用吗", "expected_source": "promotion_policy.md"},
-  {"query": "大促降价了能申请补差价吗", "expected_source": "promotion_policy.md"},
-  {"query": "优惠券显示不能用是什么原因", "expected_source": "promotion_policy.md"},
-  {"query": "优惠券可以送给朋友用吗", "expected_source": "promotion_policy.md"},
-
-  {"query": "耳机连不上手机怎么办", "expected_source": "troubleshooting_faq.md"},
-  {"query": "耳机只有一边有声音", "expected_source": "troubleshooting_faq.md"},
-  {"query": "键盘进水了怎么处理", "expected_source": "troubleshooting_faq.md"},
-  {"query": "键盘灯效没办法自定义颜色", "expected_source": "troubleshooting_faq.md"}
+  {
+    "id": "ret-pos-001",
+    "query": "除了微信登录，账号还能绑定哪些找回方式？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "paraphrase",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-002",
+    "query": "改完密码后，之前登录的手机还会保持在线吗？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-003",
+    "query": "原手机号和邮箱都收不到验证码，人工找回一般审几天？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "numeric",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-004",
+    "query": "平台自己会不会留着我的完整银行卡号？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "paraphrase",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-005",
+    "query": "旧号码停用了，换绑手机需要交什么材料？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-006",
+    "query": "注销后页面多久看不到个人资料，交易记录也一起删吗？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-007",
+    "query": "注销账号后积分和发票记录分别会怎么处理？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-008",
+    "query": "企业开专票除了名称税号还要准备什么？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "list",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-009",
+    "query": "专票资质过了以后，和电子普票哪个开得更快？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-010",
+    "query": "原价500，用券和积分后付了380，票面按哪个数？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-011",
+    "query": "收货后第25天才想起来开票，还能要纸质的吗？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-012",
+    "query": "票已经开出来才发现抬头写错，自己在订单页能改吗？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-013",
+    "query": "只退订单里的一件商品，原发票必须作废重开吗？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-014",
+    "query": "发票作废成功是不是就代表退款已经进银行卡了？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-015",
+    "query": "会员级别看累计消费多久的记录，又在哪天重算？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_fact",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-016",
+    "query": "年消费八千和两万五分别是什么等级、几倍积分？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-017",
+    "query": "等级到期降了，之前攒的分会跟着清空吗？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-018",
+    "query": "评价带视频每单能拿几分，可以反复评价刷吗？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-019",
+    "query": "三千积分最多抵多少，一笔订单还有比例上限吗？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "calculation",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-020",
+    "query": "昨晚消费已经够升级，今天为什么等级还没变？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-021",
+    "query": "退款完成后，消费额和积分什么时候影响等级？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-022",
+    "query": "积分抵扣为什么既影响会员累计消费又影响发票金额？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-023",
+    "query": "哪一种券不要求凑门槛，哪一种只能买指定类目？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-024",
+    "query": "满减券、无门槛券和秒杀活动能不能一起叠？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-025",
+    "query": "平时一单620元按日常档位减多少，能跨店凑吗？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "calculation",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-026",
+    "query": "金额明明够了券仍是灰色，除了过期还有哪些可能？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "list",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-027",
+    "query": "双十一下单后第二天更便宜，平台会补差额吗？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-028",
+    "query": "补偿发的无门槛券可以转到家人的账号吗？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-029",
+    "query": "部分退款和整单退款时，用掉的券是否都会返还？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:10"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-030",
+    "query": "活动页写满99包邮，寄西藏是否一定不用运费？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:11"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-031",
+    "query": "第七天晚上提交普通商品无理由退货还在期限内吗？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-032",
+    "query": "商品没坏但盒子、配件和票据缺了，能按无理由退吗？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-033",
+    "query": "仓库验收通过后第三天还没收到原路退款正常吗？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "numeric",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-034",
+    "query": "生鲜、定制、虚拟商品都能套用七天无理由吗？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-035",
+    "query": "确认为非人为质量故障后，只能退款不能修或换吗？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-036",
+    "query": "用积分下单又开了发票，退款前后要分别看哪些规则？",
+    "answerable": true,
+    "expected_source": "refund_policy.md",
+    "expected_sources": [
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "refund_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-037",
+    "query": "现货遇到双十一时，48小时承诺可能延到多久？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-038",
+    "query": "订单88元寄内蒙古，一定只收普通地区运费吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-039",
+    "query": "正常情况下同城和西部跨省预计分别几天？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-040",
+    "query": "暴雪期间超出表格里的配送天数就一定算平台违约吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-041",
+    "query": "显示揽收后一天没轨迹该等还是催，超过多久再联系？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-042",
+    "query": "签收后第二天才发现运输破损，还能按24小时规则报吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-043",
+    "query": "包裹已经出库，能让平台直接把地址改到另一个省吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-044",
+    "query": "我愿意补运费，结算时可以指定顺丰吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:11"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-045",
+    "query": "物流破损核实后，是物流规则直接决定退款到账时间吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:12"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-046",
+    "query": "耳机有电但手机搜不到，旧配对记录和充电盒该怎么处理？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-047",
+    "query": "一只耳机没声时，怎么区分没电、手机声道设置和硬件故障？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "diagnosis",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-048",
+    "query": "耳机在人多的地方断续，是先送修还是先排除信号和固件？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "diagnosis",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-049",
+    "query": "使用一年续航掉18%和短期掉35%，哪个更可能走售后？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-050",
+    "query": "无线键盘几个键失灵，除了清异物还应检查接口和什么？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-051",
+    "query": "驱动软件认不到键盘，重装之前还能做哪些连接排查？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:11"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-052",
+    "query": "键盘完全无反应，线、接收器和设备管理器分别怎么查？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:13"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-053",
+    "query": "键盘进液后为什么不能马上通电或用热风吹？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:15"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-054",
+    "query": "排查手册说可能硬件坏了，就一定能免费换新吗？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:16"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-055",
+    "query": "耳机、键盘、线材和显示器四类产品各保多久？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "list",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-056",
+    "query": "保修从付款、发货还是签收那天起算，以什么记录为准？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-057",
+    "query": "免费保修的核心条件是故障发生在期限内还是还要非人为？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-058",
+    "query": "单边无声和外壳开裂都可能保修，但要满足什么原因条件？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-059",
+    "query": "超期、拆机和进液这几类情况是否都一定免费修？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-060",
+    "query": "用非原装高压配件导致损坏，为什么不属于免费保修？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-061",
+    "query": "寄到售后后多久修好，修不了时按什么顺序处理？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "procedure",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-062",
+    "query": "收货第八天还能补买延保吗，之后可以随商品转给别人吗？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-063",
+    "query": "物流压坏、七天退货和保修检测三个入口该怎样区分？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-064",
+    "query": "订单没付款保留多久，系统关闭后还能恢复原券和订单吗？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-065",
+    "query": "已经付款但仓库开始拣货了，取消按钮为什么不见了？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-066",
+    "query": "状态已发货还想取消，是直接退钱还是先拒收或退回？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-067",
+    "query": "付款后想换颜色并改用另一张券，能直接编辑订单吗？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-068",
+    "query": "两个订单能合成一个快递吗，一个订单为什么会有多个单号？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-069",
+    "query": "待发货订单能把上海地址改成杭州吗？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-070",
+    "query": "我已经提交订单但还没付钱，这时商品算锁库存了吗？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-071",
+    "query": "付款后盘点发现少货，部分取消时按原价还是实付退款？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-072",
+    "query": "预售和现货一起买，默认会先发现货还是等齐？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-073",
+    "query": "我从订单列表删除记录，平台保存的交易资料也会被删吗？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-074",
+    "query": "结算页除了微信支付宝还支持什么，能货到付款吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "list",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-075",
+    "query": "余额不够时能否一半微信一半支付宝补齐？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "constraint",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-076",
+    "query": "银行卡扣了钱订单仍待付款，多久内别重复付，何时提交凭证？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-077",
+    "query": "没扣款的支付失败可能和限额有关，平台能帮我调银行限额吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-078",
+    "query": "同一笔付款被扣两次，核实后多出来的钱多久退？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "numeric",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-079",
+    "query": "平台显示退款完成两天了银行卡没到，和微信到账速度一样吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-080",
+    "query": "余额加银行卡付款后退款，为什么两部分不是同时到账？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scenario",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-081",
+    "query": "原银行卡注销了，能要求平台把退款改到家人的卡吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-082",
+    "query": "分期商品退款后手续费和本期账单由平台决定吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-083",
+    "query": "客服发来退款认证链接并让我共享屏幕，应该配合吗？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "security",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-084",
+    "query": "第七天想把普通商品换个颜色，包装完整就都可以换吗？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-085",
+    "query": "客服看视频说像质量问题，这就等于售后最终认定吗？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-086",
+    "query": "配件丢失又超过换货期，还能走哪一种维修规则？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "cross_topic",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-087",
+    "query": "同链接换更贵和更便宜的规格，差价分别怎么处理？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-088",
+    "query": "想换的颜色缺货，平台会先为我的申请锁住未来库存吗？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-089",
+    "query": "活动结束后换同款是否重算现价，跨商品又该怎么办？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-090",
+    "query": "检测是质量问题和个人想换颜色，两种往返运费谁承担？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-091",
+    "query": "售后仓签收后，正常最晚多久验完并寄出替换品？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_fact",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-092",
+    "query": "拆箱发现少件，第3天才提交照片还符合48小时要求吗？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-093",
+    "query": "补发还没出库和已经发出时，修改地址的规则一样吗？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-094",
+    "query": "晚上十一点留言，通常从什么时候开始算四小时回复？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-095",
+    "query": "节假日电话没人接，账号被盗有没有全天可用的紧急入口？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-096",
+    "query": "普通咨询、售后核查和复杂争议的处理时长分别是什么？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-097",
+    "query": "同一投诉连建五张工单会不会排得更靠前？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "medium",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-098",
+    "query": "工单结案八天后还能在原单里申请重开吗？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-099",
+    "query": "改退款账户时客服会核验哪些信息，又绝不会索要什么？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "security",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-100",
+    "query": "只截一句聊天内容没有账号和时间，能作为完整争议证据吗？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:6"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "boundary",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-101",
+    "query": "申请升级复核是否保证改判，通常还要再等多久？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "negative_premise",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-102",
+    "query": "投诉快递和投诉商品故障分别必须提交哪些证据？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "comparison",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-pos-103",
+    "query": "品牌官网买的商品可以让这个平台客服直接保修吗？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "scope",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-001",
+    "query": "整单退货已经开过票，作废后钱什么时候到银行卡？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md",
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:8",
+      "payment_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-002",
+    "query": "活动页说满99包邮，但88元寄内蒙古到底按什么规则收费？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md",
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:11",
+      "shipping_policy.md:1"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-003",
+    "query": "退款成功后积分被扣了，银行卡里的钱又要等多久？",
+    "answerable": true,
+    "expected_source": "membership_policy.md",
+    "expected_sources": [
+      "membership_policy.md",
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "membership_policy.md:8",
+      "payment_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-004",
+    "query": "已发货订单不想要了，从取消到最终收到退款要经过哪些步骤？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md",
+      "refund_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:2",
+      "refund_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-005",
+    "query": "键盘进液想换货，换货和保修分别为什么可能要自己承担费用？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md",
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:2",
+      "warranty_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-006",
+    "query": "键盘洒水后先怎么处理，之后还能不能免费保修？",
+    "answerable": true,
+    "expected_source": "troubleshooting_faq.md",
+    "expected_sources": [
+      "troubleshooting_faq.md",
+      "warranty_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "troubleshooting_faq.md:15",
+      "warranty_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-007",
+    "query": "注销账号并删除订单后，交易记录和个人资料会在同一时间彻底消失吗？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md",
+      "order_management.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:7",
+      "order_management.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-008",
+    "query": "原退款银行卡注销了，平台会不会因为保存过卡号而直接改退另一张卡？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md",
+      "account_security.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:7",
+      "account_security.md:3"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-009",
+    "query": "优惠券加积分买的商品部分退款，退款额、积分和发票金额分别受什么影响？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md",
+      "membership_policy.md",
+      "invoice_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:10",
+      "membership_policy.md:9",
+      "invoice_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-010",
+    "query": "售后核查等了三天仍不满意，升级复核还要多久且一定改判吗？",
+    "answerable": true,
+    "expected_source": "customer_service_policy.md",
+    "expected_sources": [
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "customer_service_policy.md:2",
+      "customer_service_policy.md:7"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-011",
+    "query": "包裹既破损又少件，两个问题分别要在多久内提交哪些证据？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md",
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:7",
+      "exchange_policy.md:8"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-012",
+    "query": "预售和现货一起下单又赶上大促，默认何时一起发出、最长可能怎样顺延？",
+    "answerable": true,
+    "expected_source": "order_management.md",
+    "expected_sources": [
+      "order_management.md",
+      "shipping_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "order_management.md:8",
+      "shipping_policy.md:0"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-013",
+    "query": "余额和银行卡组合付款后退款，为什么分开退而且银行卡更慢？",
+    "answerable": true,
+    "expected_source": "payment_policy.md",
+    "expected_sources": [
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "payment_policy.md:6",
+      "payment_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-014",
+    "query": "商品寄到售后检测后，通常多久维修；超过普通时限要等工单多久？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md",
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:6",
+      "customer_service_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-015",
+    "query": "积分和无门槛券能一起用吗，各自又有什么单笔使用限制？",
+    "answerable": true,
+    "expected_source": "promotion_policy.md",
+    "expected_sources": [
+      "promotion_policy.md",
+      "membership_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "promotion_policy.md:1",
+      "membership_policy.md:4"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-016",
+    "query": "换成更便宜规格产生的差额，平台用什么路径、多久退回？",
+    "answerable": true,
+    "expected_source": "exchange_policy.md",
+    "expected_sources": [
+      "exchange_policy.md",
+      "payment_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "exchange_policy.md:3",
+      "payment_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-017",
+    "query": "手机邮箱都失效后申请账号找回，要交材料并等多久，工单时限又是多少？",
+    "answerable": true,
+    "expected_source": "account_security.md",
+    "expected_sources": [
+      "account_security.md",
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "account_security.md:2",
+      "customer_service_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-018",
+    "query": "已开发票抬头错误，联系客服重开和一般工单首次回复各要多久？",
+    "answerable": true,
+    "expected_source": "invoice_policy.md",
+    "expected_sources": [
+      "invoice_policy.md",
+      "customer_service_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "invoice_policy.md:6",
+      "customer_service_policy.md:2"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-019",
+    "query": "原订单已发货和补发商品已发出，这两种情况下都还能改收货地址吗？",
+    "answerable": true,
+    "expected_source": "shipping_policy.md",
+    "expected_sources": [
+      "shipping_policy.md",
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "shipping_policy.md:9",
+      "exchange_policy.md:9"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-multi-020",
+    "query": "延保买晚了又想跨商品换货，为什么两个请求都不能按原订单直接办？",
+    "answerable": true,
+    "expected_source": "warranty_policy.md",
+    "expected_sources": [
+      "warranty_policy.md",
+      "exchange_policy.md"
+    ],
+    "expected_chunk_ids": [
+      "warranty_policy.md:7",
+      "exchange_policy.md:5"
+    ],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "multi_evidence",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-001",
+    "query": "线下门店买的商品能在哪个柜台退货？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-002",
+    "query": "可以用比特币或者数字人民币付款吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-003",
+    "query": "你们在悉尼有没有自提仓库？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-004",
+    "query": "家电安装师傅上门一次收费多少？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-005",
+    "query": "商品支持刻字定制吗，刻五个字多少钱？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-006",
+    "query": "学生认证后会员能直接升到什么等级？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-007",
+    "query": "积分可以兑换航空里程吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-008",
+    "query": "旧手机以旧换新的估价标准是什么？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-009",
+    "query": "企业批量采购一百台键盘能打几折？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-010",
+    "query": "发票能开美元金额和英文抬头吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-011",
+    "query": "海外订单关税由平台还是收件人承担？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-012",
+    "query": "直播间中奖的赠品保修多久？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-013",
+    "query": "有没有宠物损坏险或者意外险？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-014",
+    "query": "可以预约周六上午十点送到家吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-015",
+    "query": "支持到店试用耳机后再决定是否购买吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-016",
+    "query": "会员生日礼包具体会送哪一件商品？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  },
+  {
+    "id": "ret-neg-017",
+    "query": "退款到账后银行短信一定会马上通知吗？",
+    "answerable": false,
+    "expected_source": null,
+    "expected_sources": [],
+    "expected_chunk_ids": [],
+    "match_mode": "all",
+    "difficulty": "hard",
+    "query_type": "unanswerable",
+    "annotation_status": "draft_pending_human_review"
+  }
 ]

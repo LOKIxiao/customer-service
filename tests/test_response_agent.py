@@ -35,3 +35,33 @@ def test_response_agent_fallbacks_to_raw_reply_when_llm_fails():
     )
 
     assert result == "你的订单已发货。"
+
+
+class HistoryCapturingLLM:
+    def __init__(self):
+        self.history = ""
+
+    def generate_customer_reply(
+        self,
+        user_message,
+        intent,
+        raw_reply,
+        long_term_context="",
+        conversation_history="",
+    ):
+        self.history = conversation_history
+        return raw_reply
+
+
+def test_response_agent_passes_recent_history_to_llm():
+    llm = HistoryCapturingLLM()
+    agent = ResponseAgent(llm)
+
+    agent.generate(
+        user_message="那怎么重置？",
+        intent="knowledge_base_query",
+        raw_reply="请长按重置按钮。",
+        conversation_history="用户：耳机连接不上\n客服：请先检查蓝牙",
+    )
+
+    assert "耳机连接不上" in llm.history

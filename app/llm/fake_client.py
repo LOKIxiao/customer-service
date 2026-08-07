@@ -8,6 +8,7 @@ class FakeLLMClient(BaseLLMClient):
         intent: str,
         raw_reply: str,
         long_term_context: str = "",
+        conversation_history: str = "",
     ) -> str:
         return raw_reply
 

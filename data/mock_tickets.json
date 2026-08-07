@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "ticket_id": "T10001",
+    "user_id": "u_001",
+    "content": "我要投诉，我的手机号是 138****5678",
+    "status": "pending"
+  },
+  {
+    "ticket_id": "T10002",
+    "user_id": "u_001",
+    "content": "我要投诉，我的手机号是 138****5678",
+    "status": "pending"
+  },
+  {
+    "ticket_id": "T10003",
+    "user_id": "u_001",
+    "content": "我要投诉，我的手机号是 138****5678",
+    "status": "pending"
+  }
+]

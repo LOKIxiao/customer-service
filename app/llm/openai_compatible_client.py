@@ -32,9 +32,13 @@ class OpenAICompatibleClient(BaseLLMClient):
         intent: str,
         raw_reply: str,
         long_term_context: str = "",
+        conversation_history: str = "",
     ) -> str:
         known_user_info_section = (
             f"\n【已知用户信息】\n{long_term_context}\n" if long_term_context else ""
+        )
+        recent_history_section = (
+            f"\n【最近对话】\n{conversation_history}\n" if conversation_history else ""
         )
 
         prompt = f"""
@@ -48,6 +52,8 @@ class OpenAICompatibleClient(BaseLLMClient):
 4. 回复要自然、简洁，适合直接发给用户。
 5. 如果提供了【已知用户信息】，在合适的地方自然地体现出来，但不要生硬地复述。
 {known_user_info_section}
+6. 如果提供了【最近对话】，结合其中的指代和省略理解当前问题；不要把历史中的旧请求误当成当前请求。
+{recent_history_section}
 【用户问题】
 {user_message}
 

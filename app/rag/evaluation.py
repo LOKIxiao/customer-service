@@ -6,6 +6,7 @@ from app.rag.chroma_vector_store import ChromaVectorStore
 from app.rag.document_loader import DocumentLoader
 from app.rag.embedding import EmbeddingClient
 from app.rag.embedding_factory import create_embedding_client
+from app.rag.factory import create_reranker
 from app.rag.hybrid_retriever import HybridKnowledgeRetriever
 from app.rag.retriever import KnowledgeRetriever
 from app.rag.vector_store import InMemoryVectorStore
@@ -21,27 +22,88 @@ def load_dataset(path: Path = DEFAULT_DATASET) -> list[dict]:
 
 
 def evaluate(retriever, dataset: list[dict], k: int = 3) -> dict[str, Any]:
-    """计算 recall@k（top-k 里有没有命中 expected_source）和 MRR（首次命中排名的倒数均值）。"""
-    hits = 0
-    reciprocal_ranks: list[float] = []
+    """评估可回答样本的召回，并单独评估无答案样本的拒绝能力。"""
+    source_hits = 0
+    source_reciprocal_ranks: list[float] = []
+    evidence_hits = 0
+    evidence_reciprocal_ranks: list[float] = []
+    answerable_total = 0
+    unanswerable_total = 0
+    unanswerable_rejections = 0
 
     for item in dataset:
         results = retriever.retrieve(item["query"], top_k=k)
+        if not item.get("answerable", True):
+            unanswerable_total += 1
+            if not results:
+                unanswerable_rejections += 1
+            continue
+
+        answerable_total += 1
         sources = [chunk.source for chunk in results]
+        chunk_ids = [chunk.chunk_id for chunk in results]
 
-        if item["expected_source"] in sources:
-            hits += 1
-            rank = sources.index(item["expected_source"]) + 1
-            reciprocal_ranks.append(1 / rank)
+        expected_sources = set(item.get("expected_sources") or [item["expected_source"]])
+        source_ranks = [
+            sources.index(source) + 1 for source in expected_sources if source in sources
+        ]
+        source_match_mode = item.get("match_mode", "any")
+        source_matched = (
+            len(source_ranks) == len(expected_sources)
+            if source_match_mode == "all"
+            else bool(source_ranks)
+        )
+        if source_matched:
+            source_hits += 1
+            rank = max(source_ranks) if source_match_mode == "all" else min(source_ranks)
+            source_reciprocal_ranks.append(1 / rank)
         else:
-            reciprocal_ranks.append(0.0)
+            source_reciprocal_ranks.append(0.0)
 
-    total = len(dataset)
+        expected_chunk_ids = set(item["expected_chunk_ids"])
+        evidence_ranks = [
+            chunk_ids.index(chunk_id) + 1
+            for chunk_id in expected_chunk_ids
+            if chunk_id in chunk_ids
+        ]
+        match_mode = item.get("match_mode", "any")
+        evidence_matched = (
+            len(evidence_ranks) == len(expected_chunk_ids)
+            if match_mode == "all"
+            else bool(evidence_ranks)
+        )
+        evidence_rank = (
+            max(evidence_ranks) if match_mode == "all" else min(evidence_ranks)
+        ) if evidence_matched else None
+        if evidence_rank is not None:
+            evidence_hits += 1
+            evidence_reciprocal_ranks.append(1 / evidence_rank)
+        else:
+            evidence_reciprocal_ranks.append(0.0)
+
+    unique_evidence_chunks = {
+        chunk_id
+        for item in dataset
+        if item.get("answerable", True)
+        for chunk_id in item["expected_chunk_ids"]
+    }
     return {
-        "recall@k": hits / total if total else 0.0,
-        "mrr": sum(reciprocal_ranks) / total if total else 0.0,
+        "source_recall@k": source_hits / answerable_total if answerable_total else 0.0,
+        "source_mrr": (
+            sum(source_reciprocal_ranks) / answerable_total if answerable_total else 0.0
+        ),
+        "evidence_recall@k": evidence_hits / answerable_total if answerable_total else 0.0,
+        "evidence_mrr": (
+            sum(evidence_reciprocal_ranks) / answerable_total if answerable_total else 0.0
+        ),
+        "unanswerable_rejection_accuracy": (
+            unanswerable_rejections / unanswerable_total if unanswerable_total else None
+        ),
         "k": k,
-        "total": total,
+        "total": len(dataset),
+        "answerable_total": answerable_total,
+        "unanswerable_total": unanswerable_total,
+        "unique_evidence_chunks": len(unique_evidence_chunks),
     }
 
 
@@ -50,7 +112,7 @@ def _build_retrievers(
     knowledge_dir: Path = DEFAULT_KNOWLEDGE_DIR,
     persist_root: Path = DEFAULT_EVAL_PERSIST_DIR,
 ) -> dict[str, Any]:
-    return {
+    retrievers = {
         "naive（InMemory，向量only）": KnowledgeRetriever(
             document_loader=DocumentLoader(knowledge_dir=knowledge_dir),
             vector_store=InMemoryVectorStore(embedding_client),
@@ -68,6 +130,18 @@ def _build_retrievers(
             ),
         ),
     }
+    reranker = create_reranker()
+    if reranker:
+        retrievers["RRF Top20 + qwen3-rerank"] = HybridKnowledgeRetriever(
+            document_loader=DocumentLoader(knowledge_dir=knowledge_dir),
+            vector_store=ChromaVectorStore(
+                embedding_client, persist_directory=persist_root / "reranked"
+            ),
+            candidate_k=20,
+            reranker=reranker,
+            rerank_candidate_k=20,
+        )
+    return retrievers
 
 
 def run_comparison(k: int = 3, dataset_path: Path = DEFAULT_DATASET) -> None:
@@ -75,13 +149,38 @@ def run_comparison(k: int = 3, dataset_path: Path = DEFAULT_DATASET) -> None:
     embedding_client = create_embedding_client()
     retrievers = _build_retrievers(embedding_client)
 
-    print(f"评估数据集: {dataset_path}（{len(dataset)} 条），embedding={type(embedding_client).__name__}，top_k={k}\n")
-    print(f"{'配置':<24}{'recall@k':>10}{'MRR':>10}")
-    print("-" * 44)
+    positive_total = sum(item.get("answerable", True) for item in dataset)
+    unique_evidence = len(
+        {
+            chunk_id
+            for item in dataset
+            if item.get("answerable", True)
+            for chunk_id in item["expected_chunk_ids"]
+        }
+    )
+    print(
+        f"评估数据集: {dataset_path}（{len(dataset)} 条：正例 {positive_total}，"
+        f"无答案 {len(dataset) - positive_total}，覆盖证据 {unique_evidence}），"
+        f"embedding={type(embedding_client).__name__}，top_k={k}\n"
+    )
+    print(
+        f"{'配置':<24}{'来源R@K':>10}{'来源MRR':>10}{'证据R@K':>10}"
+        f"{'证据MRR':>10}{'拒答准确率':>12}"
+    )
+    print("-" * 76)
 
     for name, retriever in retrievers.items():
         result = evaluate(retriever, dataset, k=k)
-        print(f"{name:<24}{result['recall@k'] * 100:>9.1f}%{result['mrr']:>10.3f}")
+        rejection = result["unanswerable_rejection_accuracy"]
+        rejection_text = f"{rejection * 100:.1f}%" if rejection is not None else "N/A"
+        print(
+            f"{name:<24}"
+            f"{result['source_recall@k'] * 100:>9.1f}%"
+            f"{result['source_mrr']:>10.3f}"
+            f"{result['evidence_recall@k'] * 100:>9.1f}%"
+            f"{result['evidence_mrr']:>10.3f}"
+            f"{rejection_text:>12}"
+        )
 
 
 if __name__ == "__main__":
